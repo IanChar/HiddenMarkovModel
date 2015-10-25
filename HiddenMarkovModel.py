@@ -9,7 +9,15 @@ class HiddenMarkovModel(object):
         self.p = p
         self.q = q
 
-    def statesUpToN(self, n):
+    def yStatesUpTo(self, n):
+        xStates = self.xStatesUpTo(n)
+        yStates = []
+        for x in xStates:
+            yVec = matrix([[q.item(x - 1, 0), q.item(x-1, 1)]])
+            yStates.append(self.discreteInverse(yVec))
+        return yStates
+
+    def xStatesUpTo(self, n):
         states = [self.discreteInverse(mu)]
         currPtm = None
         for i in range(1, n + 1):
@@ -43,6 +51,6 @@ if __name__ == '__main__':
                 [Fraction(0,1), Fraction(1,1)]])
     hmm = HiddenMarkovModel(mu, p, q)
     # 3.1
-    print hmm.statesUpToN(3)
+    print hmm.xStatesUpTo(3)
     # 3.2
-    
+    print hmm.yStatesUpTo(3)
